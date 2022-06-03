@@ -115,17 +115,54 @@ REST API(기존 방식)의 한계
 
 ### Apollo Server를 사용해 GraphQL API 만들기
 
+#### GraphQL Server
+
 - Apollo Server : graphQL spec을 구현하고 있는 서버, GraphQL을 이해할 수 있는 서버.
   기존 서버를 많이 수정하지 않고, Apollo Server를 미들웨어로 추가하기만 해도 됨.
 
-- `Error: Apollo Server requires either an existing schema, modules or typeDefs`
-  : 서버 실행 전에 GraphQL에게 데이터의 구조, 타입 등을 미리 알려주어야 함.
-  -> GraphQL에 서버의 데이터 구조를 알고 있기 때문에 API 문서 제공, 자동완성 등이 가능하다.
+  - **데이터의 형태를 정의(Type Definition, Schema)하고,**
+    **데이터를 실제로 만들어낼 수 있는 코드(Resolvers)를 작성해야 한다.**
 
-- GraphQL 서버에서 Scheme를 정의할때, Query Type은 반드시 정의되어야 함. (사용자가 request를 보낼 수 있도록)
-  GraphQL API에서 쿼리 타입의 정의 = REST API에서 URL을 노출시키는 것과 동일한 개념.
+  - Apollo Server를 시작하면,
+    Apollo Studio에서 제공하는 query console과 schema-generated docs를 이용할 수 있다.
+    `Error: Apollo Server requires either an existing schema, modules or typeDefs`
+    -> 서버 실행 전에 GraphQL에게 데이터의 구조, 타입 등을 미리 알려주어야 함.
+    GraphQL에서 서버의 데이터 구조를 알고 있기 때문에 API 문서 제공, 자동완성 등이 가능해진다.
 
-- Apollo Server를 시작하면,
-  Apollo Studio에서 제공하는 query console과 schema-generated docs를 이용할 수 있다.
+#### Type Definitions (Schema)
 
-- Scalar Type : GraphQL에서 자체적으로 제공하는 타입들 (String, Int, Boolean, ID 등)
+- Scalar Type : GraphQL에서 자체적으로 제공하는 타입들(buit-in types) (String, Int, Boolean, ID 등)
+
+- Root Type : type definition, 스키마 루트에 정의된 타입 (Query Type, Mutation Type 포함)
+
+- Query Type : REST API의 GET 요청을 위한 타입 (for Read)
+  / Mutation Type : REST API의 POST 등의 요청을 위한 타입 (for Write)
+
+  - 요청 시 유저로부터 **arguments를** 받을 수 있다.
+
+  - GraphQL 서버에서 Scheme를 정의할때, Query Type은 반드시 정의되어야 함. (사용자가 request를 보낼 수 있도록)
+    GraphQL API에서 쿼리 타입의 정의 = REST API에서 URL을 노출시키는 것과 동일한 개념.
+
+  - Query, Mutation은 이론적인/개념적인 구분일 뿐, write 요청을 쿼리 타입에 포함시키는 등 스펙을 지키지 않아도
+    에러가 발생하지는 않는다.
+
+- Non Nullable Fields :
+  GraphQL의 모든 필드는 기본적으로 nullable이다. ! 를 붙이면 Non Nullable 필드, required 필드가 된다.
+
+#### Resolvers
+
+- Resolvers : Type Definition으로 정의한 데이터들을 실제로 제공할 수 있도록 작성된 로직.
+  반드시 Type Definition과 동일한 이름과 구조(스키마)로 작성되어야 한다. (쿼리, 뮤테이션에 정의된 필드와 일대일로 대응해야 함. )
+  Resolver는 누군가 데이터를 요청했을 때 호출되는 함수이다.
+  Resolver들을 하나의 객체로 모아둔 것을 resolver map 이라고 한다.
+
+- resolvers를 호출할 때 전달되는 인자들 :
+
+1. root : Resolver를 호출한 필드가 속한 타입
+2. args : 유저가 전달한 인자들
+
+- Query Resolver, Mutation Resolver, Type Resolver 등이 있다.
+
+- Dynamic Field와 Type Resolver(Field Resolver) :
+  동적으로 데이터가 생성되는 필드에 대한 Type Resolver도 Query Resolver나 Mutation Resolver와
+  같은 방식으로 정의할 수 있다.
