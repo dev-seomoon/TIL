@@ -138,7 +138,7 @@ REST API(기존 방식)의 한계
 - Query Type : REST API의 GET 요청을 위한 타입 (for Read)
   / Mutation Type : REST API의 POST 등의 요청을 위한 타입 (for Write)
 
-  - 요청 시 유저로부터 **arguments를** 받을 수 있다.
+  - 요청 시 유저로부터 **arguments**를 받을 수 있다.
 
   - GraphQL 서버에서 Scheme를 정의할때, Query Type은 반드시 정의되어야 함. (사용자가 request를 보낼 수 있도록)
     GraphQL API에서 쿼리 타입의 정의 = REST API에서 URL을 노출시키는 것과 동일한 개념.
@@ -166,3 +166,19 @@ REST API(기존 방식)의 한계
 - Dynamic Field와 Type Resolver(Field Resolver) :
   동적으로 데이터가 생성되는 필드에 대한 Type Resolver도 Query Resolver나 Mutation Resolver와
   같은 방식으로 정의할 수 있다.
+
+🧚‍♀️ Node.js 환경에서는 fetch() 메서드가 기본적으로 제공되지 않음
+-> node-fetch 패키지 추가 필요
+
+#### REST API를 GraphQL API로 wrapping하기
+
+: GraphQL은 데이터를 어디에서 가져올지 자유롭게 선택할 수 있다.
+-> REST API의 데이터를 GraphQL 스키마로 구조화하고,
+resolver에서 REST API 요청으로 데이터를 받아오면
+REST API를 GraphQL API로 wrapping할 수 있다.
+
+#### Subscription Type
+
+API에 변경 사항이 있을 때 리얼타임으로 업데이트를 받는 것
+
+- hasura : 데이터베이스를 hasura 서버에 연결하면 -> 자동으로 GraphQL API가 생성된다.
