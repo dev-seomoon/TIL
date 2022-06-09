@@ -1,48 +1,58 @@
 # [공식문서 읽기] React Native 0.68 ver.
 
-The Basics
-Introduction
+## The Basics
 
-자바스크립트 기초에 대한 이해가 필요함
--> 자바스크립트 공부하기
-https://developer.mozilla.org/en-US/docs/Web/JavaScript
+### 1) Introduction
 
-Snack 플레이어를 사용해 브라우저에서 RN 코드를 작성하고 바로 테스트해볼 수 있다. (아이패드에서 작업할 때 사용하면 좋을 듯)
+- 자바스크립트 기초에 대한 이해가 필요함
+  -> 자바스크립트 공부하기
+  https://developer.mozilla.org/en-US/docs/Web/JavaScript
 
-함수 컴포넌트와 클래스 컴포넌트 :
+- Snack 플레이어를 사용해 브라우저에서 RN 코드를 작성하고 바로 테스트해볼 수 있다. (아이패드에서 작업할 때 사용하면 좋을 듯)
+
+#### 함수 컴포넌트와 클래스 컴포넌트
+
 React에서는 클래스 또는 함수를 사용해 컴포넌트를 만들 수 있다.
-클래스 컴포넌트에서만 state를 가질 수 있었지만, React Hook API의 도입으로 함수 컴포넌트에서도 state 등을 추가할 수 있게 되었다.
-RN 0.59 버전부터 리액트 hooks가 도입.
+기존에는 클래스 컴포넌트에서만 state를 가질 수 있었지만, React Hook API의 도입으로 함수 컴포넌트에서도 state 등을 추가할 수 있게 되었다.
+(RN 0.59 버전부터 리액트 hooks가 도입.
 hooks가 좀 더 미래지향적인 React 작성 방식이기 때문에,
-공식문서는 기본적으로 함수 컴포넌트 기반으로 작성됨.
+공식문서는 기본적으로 함수 컴포넌트 기반으로 작성됨. )
 
-Core Components and Native Components
-RN은 React와 앱 플랫폼의 네이티브 api를 사용해서 Android, iOS 앱을 개발할 수 있는 오픈소스 프레임워크.
-RN에서는 React 컴포넌트(재사용, 중첩이 가능한 코드 묶음)를 사용해 UI를 구현하고, 자바스크립트를 사용해 플랫폼 api에 접근한다.
+### 2) Core Components and Native Components
 
-뷰와 모바일 앱 개발 :
-앱 개발에서 View는 UI의 기본 구성단위이다. view는 중첩이 가능하며 앱 화면을 구성하는 모든 요소가 view로 이루어져 있다.
+React Native :
 
-네이티브 컴포넌트 :
-RN을 사용하면, React 컴포넌트를 사용해 JS로 네이티브 뷰를 호출할 수 있다. RN은 런타임에 컴포넌트에 해당하는 네이티브 뷰를 생성함으로써 네이티브와 동일한 뷰를 지원하게 된다. 이러한 플랫폼 지원 컴포넌트를 네이티브 컴포넌트라고 한다.
+- React와 앱 플랫폼의 네이티브 api를 사용해서 Android, iOS 앱을 개발할 수 있는 오픈소스 프레임워크.
+- React 컴포넌트(재사용, 중첩이 가능한 코드 묶음)를 사용해 UI를 구현하고, 자바스크립트를 사용해 플랫폼 api에 접근한다.
 
-코어 컴포넌트 :
-RN에서 기본적으로 제공하는 네이티브 컴포넌트들을
-코어 컴포넌트라고 한다.
+#### 뷰와 모바일 앱 개발
 
-필요한 네이티브 컴포넌트를 직접 구현하거나, 커뮤니티에서 개발된 네이티브 컴포넌트를 사용할 수도 있다. ->  Native Directory 참고
+앱 개발에서 **View**는 UI의 기본 구성단위이다.
+View는 중첩이 가능하며 앱 화면을 구성하는 모든 요소가 View로 이루어져 있다.
 
-코어 컴포넌트 리스트 (documented in the API section) :
-<View> - flexbox 레이아웃 지원 컨테이너, 일부 터치 핸들링, 접근성 관리,
-<Text> - 문자열 표현 / 터치 이벤트 핸들링,
-<Image>, <ScrollView>, <TextInput> 등
+#### 네이티브 컴포넌트
 
-RN은 React 컴포넌트와 동일한 API 구조를 사용하기 때문에,
-React 컴포넌트 API를 이해하고 있어야 함.
--> React 기초 학습 필요 React’s official documentation
+RN을 사용하면, React 컴포넌트를 사용해 **JS로 네이티브 뷰를 호출**할 수 있다. RN은 런타임에 컴포넌트에 해당하는 네이티브 뷰를 생성함으로써 네이티브와 동일한 뷰를 지원하게 된다. 이러한 플랫폼 지원 컴포넌트를 네이티브 컴포넌트라고 한다.
 
-React Fundamentals
-RN은 React(자바스크립트로 UI를 구현할 수 있는 인기 있는 오픈소스 라이브러리) 위에서 실행된다. 따라서 RN을 최대한 활용하려면 React 자체를 이해하는 것이 도움이 됨.
+#### 코어 컴포넌트
+
+- RN에서 기본적으로 제공하는 네이티브 컴포넌트들을
+  코어 컴포넌트라고 한다.
+
+- 필요한 네이티브 컴포넌트를 직접 구현하거나, 커뮤니티에서 개발된 네이티브 컴포넌트를 사용할 수도 있다. ->  Native Directory 참고
+
+- 코어 컴포넌트 리스트 (documented in the API section) :
+  <View> - flexbox 레이아웃 지원 컨테이너, 일부 터치 핸들링, 접근성 관리,
+  <Text> - 문자열 표현 / 터치 이벤트 핸들링,
+  <Image>, <ScrollView>, <TextInput> 등
+
+### 3) React Fundamentals
+
+- RN은 React 컴포넌트와 동일한 API 구조를 사용하기 때문에,
+  React 컴포넌트 API를 이해하고 있어야 함.
+  -> React 기초 학습 필요
+
+- RN은 React(자바스크립트로 UI를 구현할 수 있는 인기 있는 오픈소스 라이브러리) 위에서 실행된다. 따라서 RN을 최대한 활용하려면 React 자체를 이해하는 것이 도움이 됨.
 
 컴포넌트 :
 함수 컴포넌트가 반환하는 것은 React 엘리먼트로 렌더링된다.
