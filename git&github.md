@@ -21,3 +21,9 @@
 `lg = log --graph --abbrev-commit --decorate --format=format:'%C(cyan)%h%C(reset) - %C(green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(yellow)%d%C(reset)' --all`
 
 출처: https://goddaehee.tistory.com/273 [갓대희의 작은공간:티스토리]
+
+vi ~/.zshrc
+
+alias hello="echo hello-world"
+
+source ~/.zshrc
