@@ -6,7 +6,7 @@
 
 2. 서브모듈에서 작업한 사항 올리기 :
 
-   - cd submodule && git add & git commit & git push origin HEAD:main
+   - cd submodule && git add & git commit & **git push origin HEAD:main**
    - cd .. && git add commit push
 
 3. 서브모듈에서 작업한 사항 가져오기 :
@@ -27,3 +27,5 @@ vi ~/.zshrc
 alias hello="echo hello-world"
 
 source ~/.zshrc
+
+git push
