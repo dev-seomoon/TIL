@@ -1,0 +1,128 @@
+https://kr.vuejs.org/v2/guide/index.html
+
+### computed와 watch
+
+템플릿 안에서 간단하지 않은 연산이 필요한 경우 -> computed 속성 사용
+computed 속성에서 의존하고 있는 데이터가 변경되면, computed 속성도 업데이트된다.
+
+computed 속성 정의 :
+연산된 결과값을 리턴하는 getter 함수를 정의한다.
+(필요에 따라 setter 함수도 추가로 정의할 수 있다. )
+
+computed는 선언형 프로그래밍, watch는 명령형 프로그래밍으로,
+반드시 필요한 경우가 아니라면
+watch 대신 computed를 사용하는 것을 권장한다.
+
+템플릿에서 computed 속성의 getter 함수 이름만 작성하면,
+해당 computed 속성이 의존하고 있는 데이터가 변경되었을 때만 연산이 다시 발생하지만, (캐싱 방식)
+getter 함수를 호출하면, 렌더링을 할 때마다 연산을 하게 된다. (메소드 호출 방식)
+
+watch 속성은 vue 인스턴스의 데이터 변경을 감시하고,
+데이터가 변경되었을 때 실행할 콜백을 지정하는 방식으로 사용한다.
+
+### 클래스와 스타일 바인딩
+
+#### 클래스 바인딩
+
+엘리먼트의
+클래스, 인라인 스타일 설정을 위해서
+데이터 바인딩을 사용하는 경우 :
+`v-bind` 로 처리할 수 있다.
+이 때 vue에서는 문자열이 아닌 객체나 배열을 전달할 수 있도록 지원한다.
+(문자열 연산은 오류가 발생하기 쉽고 번거롭기 때문)
+
+`<div v-bind:class="{ active: isActive }"></div>`
+-> `isActive`가 true일 때만 active 클래스가 추가된다.
+
+- 클래스 객체를 위와 같이 인라인으로 작성하지 않고,
+- vue 인스턴스의 data에서 별도로 분리해서 작성할 수도 있다.
+  객체를 반환하는 computed 속성도 바인딩할 수 있다.
+
+- 배열을 전달할 수도 있고, 배열 안에서 객체를 사용할 수도 있다.
+
+- Vue 컴포넌트에 클래스를 전달하면, 해당 컴포넌트의 루트 엘리먼트에 클래스가 추가된다.
+
+#### 인라인 스타일 바인딩
+
+`<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>`
+
+### 조건부 렌더링
+
+`v-if="show"` : `v-if` 디렉티브에 전달된 표현식이 true 값을 반환할 때만 렌더링된다.
+`v-else`, `v-else-if` 디렉티브도 같이 사용 가능함
+
+조건이 바뀌더라도 렌더링이 다시 일어나지 않고 데이터가 유지된다.
+조건이 바뀔 때 렌더링을 다시 하려면 유니크한 `key` 속성을 추가하면 된다.
+
+여러 개의 엘리먼트를 트랜지션하려면,
+보이지 않는 wrapper 역할을 하는 `<template>` 엘리먼트에 `v-if`를 사용한다. 최종 렌더링 결과에는 `<template>` 엘리먼트가 포함되지 않는다.
+
+`v-show` :
+`v-if`는 true일 때만 렌더링되고 DOM에 포함되지만,
+`v-show`는 항상 렌더링되고 DOM에 포함되며 css display 속성만 바뀐다.
+
+### 리스트 렌더링
+
+`v-for` 디렉티브를 사용해 배열이나 객체를 렌더링할 수 있다.
+리스트의 각 요소에는 유니크한 `key` 속성을 제공해야 한다. key값은 문자열이나 숫자를 사용해야 한다.
+
+```vue
+<ul>
+  <li v-for="item in items">
+    {{ item.message }}
+  </li>
+</ul>
+```
+
+원본 배열을 변경하는 배열 메소드를 호출하면,
+자동으로 뷰가 갱신된다.
+
+원본 배열을 변경하지 않고 새 배열을 반환하는 배열 메소드로
+기존 배열을 대체하는 방식으로 뷰를 갱신할 수도 있다.
+
+단, 인덱스로 배열 항목을 변경하거나, 배열 길이를 직접 수정하는 경우는 vue에서 감지하지 못한다.
+
+인덱스로 배열 항목을 변경하는 대신 Vue.set(vm.$set)을 사용하고,
+배열 길이를 수정해야하는 경우에는 `splice()`메소드를 사용하면 된다.
+
+vue는 인스턴스 객체의 data에 새로운 속성을 추가하거나, 속성을 삭제하는 것을 감지하지 못한다.
+인스턴스가 생성된 후에 객체의 속성을 추가/삭제하려면
+마찬가지로 Vue.set을 사용해야 한다. 또는 Object.assign()을 사용해도 된다.
+
+원본 배열을 실제로 변경하지 않고,
+배열의 필터링된 버전이나 정렬된 버전을 표시해야 할 때 :
+computed 속성이나 methods를 활용한다.
+
+### 이벤트 핸들링
+
+메소드 이름을 바인딩할 수도 있고,
+메소드에 전달해야 하는 인자가 있는 경우 인라인으로 메소드를 사용할 수도 있다.
+
+```vue
+<button v-on:click="greet">Greet</button>
+<button v-on:click="say('hi')">Say hi</button>
+```
+
+`$event` 변수를 사용해서 DOM 이벤트 객체를 핸들러 함수에 전달할 수 있다.
+
+핸들러 함수 안에서는 데이터 로직 관련 처리만 할 수 있도록,
+DOM 이벤트 처리 관련 메소드를 수식어로 제공한다. (`.stop` - `event.stopPropagation`, `.prevent` - `event.preventDefault` 등)
+키보드 이벤트 리스너에서 키 코드를 확인해야할 때
+키 수식어를 사용할 수 있다.
+
+vue.js의 EventBus
+vue.js에서 이벤트를 쉽게 다루기 위해 EventBus라는 개념을 이용할 수 있으며, 누구나 쉽게 사용할 수 있습니다.
+
+```js
+var EventBus = new Vue(); // EventBus 생성
+
+EventBus.$on("message", function (text) {
+  console.log(text);
+}); // addEventListner
+
+EventBus.$emit("message", "hello world"); // 이벤트 리스너 호출 및 인자 전달
+```
+
+자, 이렇게 하여 vue.js에서 이벤트를 쉽게 활용할 수 있습니다. 위와 같이 구현해놓는다면 컴포넌트가 전혀 다르더라도 서로 쉽게 호출할 수 있습니다.
+
+https://vuejs-kr.github.io/jekyll/update/2017/02/13/vuejs-eventbus/
