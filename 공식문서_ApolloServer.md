@@ -46,3 +46,45 @@ ApolloServer 생성자의 인자로 resolver를 전달한다.
 ```
 const server = new ApolloServer({ typeDef, resolvers })
 ```
+
+---
+
+# Apollo Server
+
+Apollo Server :
+GraphQL 서버의 한 종류.
+모든 GraphQL 클라이언트(Apollo Client 포함)와 호환되는 오픈소스 GraphQL 서버로,
+GraphQL API 구축을 위해 사용한다.
+
+Apollo Server 사용법
+
+1)데이터 구조 정의하기 -> 스키마 정의
+GraphQL 서버는 스키마를 사용해
+클라이언트가 쿼리할 수 있는 데이터 구조를 정의한다.
+
+스키마는 타입 정의들로 이루어진다.
+쿼리 정의도 포함함.
+
+const schema = gql`type Book { title: String } type Query { books: [Book] }`; 과 같이 선언함
+
+\*“Query" type :
+클라이언트가 실행할 수 있는 쿼리들과, 각 쿼리의 리턴 타입을 정의함.
+
+2)데이터 정의하기 -> data set 정의
+Apollo Server는 어디든 연결해서 데이터를 가져올 수 있다. (데이터베이스, REST API 등)
+
+3)쿼리와 데이터 매핑하기 -> Resolver 정의
+각 쿼리를 실행했을 때, 어떤 데이터를 보낼지 매핑하는 역할.
+const resolvers = {
+Query: {
+books: () => books,
+},
+}
+
+4)ApolloServer 인스턴스 생성하기
+ApolloServer() 생성자의 인자로
+스키마와 resolver를 전달해서 server 인스턴스를 생성한다.
+
+생성된 server 인스턴스의 listen 메소드를 사용해서 웹 서버를 시작시킨다.
+
+localhost에 접속 > Apollo Sandbox 접속 > Sandbox에서 쿼리를 실행해볼 수 있다.
