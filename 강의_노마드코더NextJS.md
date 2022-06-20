@@ -76,7 +76,7 @@
 
 - 단, Link 태그는 href 속성만 가질 수 있음. 다른 props나 style 전달을 위해서 Link 태그 하위에 anchor태그를 사용해야 함.
 
-```
+```jsx
 <Link href="/">
   <a>Home</a>
 </Link>
