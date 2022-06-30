@@ -349,24 +349,187 @@ Next.js는 다음과 같은 기능들을 제공한다.
   (뷰포트 크기에 맞는 이미지 리사이징 및 최적화,
   브라우저 호환성을 고려해 최신 이미지 포맷(Webp 등) 지원)
   CMS와 같은 외부 데이터 소스에서 제공된 이미지도 자동으로 최적화된다.
+  src, height, width를 props로 받는다.
 
   - 이미지 최적화가 빌드 타임에 이루어지는 것이 아니라,
     유저가 요청할 때 최적화되는 on-demand 방식으로 이루어짐.
     -> 이미지 갯수가 많아도 빌드에 걸리는 시간이 증가하지 않는다.
 
-  - 이미지가 기본적으로 레이지 로딩됨.
+  - 이미지는 기본적으로 레이지 로딩됨.
     뷰포트 바깥에 있는 이미지에 의해서 페이지 속도가 저하되지 않고,
     스크롤에 따라 뷰포트에 들어와있는 이미지들만 로딩된다.
 
----
+  - 또한 이미지는 구글의 Core Web Vital(사용자 경험 측정 지표) 중 하나인 CLS(Cumulative Layout Shift, 누적 레이아웃 이동)를 방지할 수 있는 방식으로 렌더링된다.
 
-- 각 페이지의 `<head>` 태그 작성
+#### Metadata
 
-- CSS Module로 리액트 컴포넌트 스타일링
+- 페이지의 metadata(`<head>` 태그 내부)를 수정하려면,
+  Next.js의 내장 리액트 컴포넌트인 `<Head>` 컴포넌트를 사용하면 된다.
 
-- `pages/_app.js`에 전역 CSS 추가
+  ```jsx
+  import Head from "next/head";
+
+  <Head>
+    <title>Create Next App</title>
+    <link rel="icon" href="/favicon.ico" />
+  </Head>;
+  ```
+
+- `<html>` 태그 속성 등을 변경하려면 `pages/_document.js` 파일을 생성한다
+
+#### 서드파티 JavaScript
+
+- 서드파티 JavaScript : 외부 소스에서 가져온 스크립트.
+  주로 직접 작성할 필요가 없는 기능을 추가할 때 사용함.
+
+  - `<Script>` 컴포넌트 : HTML `<script>` 엘리먼트의 확장. 스크립트를 언제 로딩하고 실행할지에 대한 최적화가 자동으로 이루어진다.
+    src, strategy(스크립트를 언제 로딩할지), onLoad 등의 props를 받는다.
+
+#### CSS 스타일링
+
+- Next.js에는 "styled-jsx"라는 CSS-in-JS 라이브러리가 내장되어 있다. CSS를 리액트 컴포넌트 안에서 작성할 수 있고, 작성한 CSS 스타일이 해당 컴포넌트에만 한정적으로 적용(scoped)된다.
+  styled-components, emotion 등 다른 CSS-in-JS 라이브러리도 사용할 수 있다.
+
+  ```jsx
+  <style jsx>{...}</style>
+  ```
+
+- Layout 컴포넌트 :
+
+  1. 프로젝트 루트에 `components/layout.js` 생성
+
+  2. Layout 컴포넌트로 다른 페이지 컴포넌트를 감싸기
+
+  3. Layout 컴포넌트에 스타일 추가 :
+     CSS 파일을 리액트 컴포넌트로 import할 수 있게 해주는 **CSS Moduels** 사용.
+     CSS 모듈을 사용하려면 CSS 파일 이름이 `.module.css`로 끝나야 함
+
+     -> `components/layout.module.css`
+
+  layout.module.css
+
+  ```css
+  .container {
+    ...;
+  }
+  ```
+
+  layout.js
+
+  ```jsx
+  import styles from "./layout.module.css";
+
+  export default function Layout({ children }) {
+    return <div className={styles.container}>{children}</div>;
+  }
+  ```
+
+  - CSS 모듈이 자동으로 유니크한 클래스명을 생성하기 때문에, 클래스명 충돌을 고려하지 않아도 된다.
+
+  - Next.js의 코드 스플리팅 기능이 CSS 모듈에도 적용되어, 각 페이지에 필요한 최소한의 CSS만 로딩된다.
+
+  - CSS 모듈은 빌드 타임에 자바스크립트 번들에서 추출되어 `.css` 파일로 생성된다.
+
+- 전역 스타일 :
+
+  - 앞에서 알아본 것처럼, CSS Module을 사용하면 컴포넌트 단위 스타일링을 할 수 있다.
+
+  - 컴포넌트 스타일이 아니라 전역 스타일을 주려면 `pages/_app.js`의 App 컴포넌트에서 스타일을 import하면 된다.
+    App 컴포넌트는 모든 페이지를 아우르는 최상위 컴포넌트로, 페이지 이동 시에도 유지되어야 하는 상태를 저장하는 데 사용할 수 있다.
+
+  - 전역 css 파일의 위치나 이름은 자유롭게 정할 수 있다. 단, 전역 css 파일은 반드시 `pages/_app.js`에서만 import해야 한다.
+
+  (\*공식문서에서는 `styles/global.css` 사용)
+
+- 스타일링 팁 :
+
+  - `classnames` 라이브러리를 사용해 클래스명을 쉽게 토글링할 수 있다.
+
+  - Next.js는 PostCSS를 사용해 CSS를 컴파일한다.
+    Tailwind CSS 등의 라이브러리 사용을 위해 PostCSS config를 수정하려면 프로젝트 루트에 `postcss.config.js` 파일을 생성한다.
+    -> [Tailwind CSS 설정하기](https://nextjs.org/learn/basics/assets-metadata-css/styling-tips)
+
+  - sass 패키지 설치 후 `.module.scss`, `.module.sass`로 컴포넌트 레벨에서 Sass를 사용할 수 있다.
 
 ### 4) pre-rendering과 데이터 fetching
+
+#### Pre-rendering
+
+- Next.js는 기본적으로 모든 페이지를 pre-rendering한다. 각 페이지의 HTML을 JavaScript로 클라이언트에서 생성하는 대신 Next.js에서 미리 생성한다.
+  -> 성능 개선과 SEO(검색엔진 최적화)에 유리하다.
+  +)또한 느린 네트워크 환경에서 자바스크립트 코드 실행 전에 빈 화면 대신 앱의 UI를 볼 수 있어 사용자 경험에도 좋다.
+
+- 브라우저에서 페이지가 로딩되면, 해당 페이지에 관련된 JavaScript 코드가 실행되어 페이지를 동적으로 만든다. (이 과정을 hydration이라고 한다. )
+
+- 브라우저에서 자바스크립트를 비활성화한 후에 페이지에 접근하면 Pre-rendering이 이루어지고 있는지 확인할 수 있다. 일반 React 앱에서는 pre-rendering을 하지 않기 때문에 자바스크립트를 비활성화하면 빈 화면이 뜬다.
+
+- Pre-rendering 종류 :
+
+  1. Static Generation :
+     빌드 타임에 HTMl을 생성하는 pre-rendering 방식.
+     요청 시 미리 렌더링된 HTML이 재사용됨.
+
+  2. Server-side Rendering :
+     각 요청마다 HTML을 생성하는 방식.
+
+- 개발 모드에서는 모든 페이지가 서버사이드 렌더링 된다.
+
+- 페이지별로 프리렌더링 방식을 다르게 지정할 수 있다.
+
+- Static Generation v.s. Server-side Rendering :
+
+  - 가능하면 Static Generation 사용을 권장함. (페이지를 한 번만 생성하고 CDN을 통해 제공하게 되어, 매요청마다 서버가 페이지를 렌더링하는 것보다 빠르기 때문. )
+
+  - 유저 요청 전에 미리 렌더링할 수 있는 페이지 -> Static generation,
+    유저 요청 전에 미리 렌더링할 수 없는 페이지(페이지의 데이터가 자주 업데이트되거나, 페이지 콘텐츠가 요청할 때마다 변경되는 경우) -> Server-side rendering.
+
+    서버 사이드 렌더링을 사용하면 속도는 좀 더 느리지만, 항상 최신화된 페이지를 제공할 수 있다.
+
+- 자주 업데이트되는 데이터를 렌더링해야하는 경우 pre-rendering을 하지 않고
+  클라이언트 사이드 렌더링을 할 수도 있다.
+
+- Data fetching이 필요한 경우 Static generation :
+  파일 시스템, 외부 API, 데이터베이스 쿼리 등으로 외부 데이터를 가져온 후에
+  렌더링해야 하는 경우 -> 빌드 타임에 데이터를 먼저 fetch한 후 HTMl을 생성한다.
+
+  - `getStaticProps` : 페이지 컴포넌트를 export할 때,
+    비동기 함수인 `getStaticProps`도 같이 export하면 빌드 타임에 `getStaticProps`가 실행된다.
+    이 함수 내부에서 외부 데이터를 fetch하고 페이지 컴포넌트에 props로 보낼 수 있다.
+    _“Hey, this page has some data dependencies — so when you pre-render this page at build time, make sure to resolve them first!”_
+
+  - `getStaticProps`는 서버 사이드에서만 실행되고 브라우저에 전달되지 않기 때문에, 데이터베이스에 직접적으로 쿼리를 하는 등의 코드도 작성할 수 있다.
+
+  - 개발환경에서는 매 요청마다 getStaticProps가 실행되고, 프로덕션 환경에서는 빌드 타임에 실행된다.
+    요청 시에만 접근 가능한 데이터(쿼리 파라미터, HTTP 헤더 등)에는 접근이 불가능하다.
+
+  - 페이지 컴포넌트 파일에서만 export할 수 있다. 리액트는 페이지가 렌더링되기 전에 렌더링에 필요한 모든 데이터를 가지고 있어야 하기 때문.
+
+  - 요청 시에 데이터를 Fetch해야 하는 경우 :
+    유저 요청 이전에 페이지를 미리 렌더링할 수 없는 경우,
+    예를 들어 데이터가 빈번히 업데이트되거나 페이지 콘텐츠가 요청할 때마다 변경되는 경우에는,
+    Static Generation이 아닌 Server-side rendering을 하거나, Pre-rendering을 하지 않을 수도 있다.
+
+- 빌드 타임이 아닌 런타임에 매요청마다 데이터가 fetching되고 HTML이 생성되는 경우 서버사이드 렌더링 : 페이지에서 `getServerSideProps` export.
+
+  - `getServerSideProps`는 요청 시에 호출되므로
+    요청 파라미터를 포함하는 `context`를 인자로 받는다.
+
+  `getServerSideProps`를 사용하면
+  서버가 요청 결과를 매요청마다 연산해야하고, 추가 설정 없이는 요청 결과가 CDN에 캐싱되지 않기 때문에 TTFB(Time To First Bite)가 `getStaticProps`보다 느려질 수 있다. 따라서 요청을 할 때 데이터를 가져와야 하는 경우에만 사용하는 것이 좋다.
+
+#### 클라이언트 사이드 렌더링
+
+데이터를 미리 렌더링할 필요가 없다면 클라이언트 사이드 렌더링을 사용할 수 있다.
+
+- 클라이언트 사이드 렌더링 :
+
+  1. 페이지에서 외부 데이터가 필요하지 않은 부분을 먼저 정적으로 생성한다.
+  2. 페이지가 로딩된 후에 클라이언트에서 JavaScript로 외부 데이터를 가져와서 나머지 부분을 채운다.
+
+- 클라이언트 사이드 렌더링이 적합한 예시 :
+  유저 대시보드.
+  SEO를 적용할 필요가 없고,
+  유저에 따라 다른 페이지가 제공되고, 데이터가 빈번히 업데이트되며 요청 시에 데이터 fetch가 필요하기 때문.
 
 ### 5) Dynamic Routing (동적 라우팅)
 
@@ -392,3 +555,11 @@ Next.js :
 라우팅, data fetching, 렌더링, 서드파티 서비스 통합, 인프라, 성능, 확장성, 개발자 경험 등 신경써야할 부분이 많음.
 
 Next.js는 리액트가 담당하는 부분 외에도 추가적으로 웹 앱 개발에 필요한 것들을 제공해준다.
+
+```
+
+```
+
+```
+
+```
