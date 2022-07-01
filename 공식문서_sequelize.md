@@ -67,6 +67,24 @@
 
 ### 9) Paranoid
 
+## Other topics
+
+### Transactions
+
+#### Transaction이란 ?
+
+Transaction은 DBMS에서 수행되는 한 작업 단위. 주로 DB의 변경사항을 나타냄.
+데이터베이스 환경에서 Transaction의 목적은 크게 두 가지
+
+1. 작업이 실패했을 때 롤백이 가능한 신뢰할 수 있는 작업 단위. DB에 데이터를 추가/삭제/수정하는 작업을 할 때, 작업이 중단되거나 실패했을 때 되돌리기 위해서
+2. 여러 프로그램이 DB에 동시에 접근할 때 독립성을 보장하기 위해서.
+
+예시) 계좌이체 - 작업이 중단되거나 실패했을 때 원래 상태로 완전히 되돌릴 수 있어야 하고, 각 요청이 모두 독립성이 보장되어야 함.
+
+transaction은 atomic, consistent, isolated, durable(ACID)해야 함.
+
+ref) https://en.wikipedia.org/wiki/Database_transaction
+
 ---
 
 # Memo
