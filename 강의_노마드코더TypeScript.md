@@ -360,3 +360,95 @@ type Dress = Cloth & {
 - 객체지향 프로그래밍을 지향한다면 interface 사용, 좀 더 유연한 프로그래밍을 하고 싶다면 type 사용 권장.
 
 #### interface + class
+
+##### interface & type
+
+(복습)
+
+- interface와 type의 공통점 : 오브젝트의 구조를 정의할 수 있다.
+
+- interface와 type의 차이점 :
+  interface 사용 시 상속, 프로퍼티 통합이 가능하다.
+  (type을 사용하는 경우에도 상속 구현은 가능하지만 방식이 다름. -> & 연산자를 사용해 구현)
+
+  Interfaces can only be used to type an object, a Type can be used for any type.
+
+##### abstract class
+
+- abstract class : 추상클래스를 상속 받는 다른 클래스가 구현해야 할 프로퍼티와 메소드를 명시하는 클래스.
+  (일종의 템플릿/blue print/설계도 역할)
+
+  - 추상클래스의 인스턴스를 생성할 수 없다.
+  - 어떻게 구현해야 할지는 알려주지 않지만, 무엇을 구현해야할지에 대해서 알려주는 클래스.
+  - 추상메소드 : 추상클래스에서는 call signature만 선언. 추상클래스를 상속받는 다른 클래스에서 반드시 구현해야 한다.
+
+  - 자바스크립트에는 abstract의 개념이 없다. -> 타입스크립트로 작성한 abstract class를 컴파일하면 일반 클래스가 된다.
+
+  추상 클래스를 상속받는 클래스들의 프로퍼티와 메소드를 표준화하기 위해서
+  추상 클래스를 사용하는 것이므로,
+  자바스크립트로 컴파일된 코드에는 추상클래스가 더이상 필요하지 않다.
+
+  => **인터페이스** 를 추상클래스 대신 사용하기 !
+  인터페이스는 컴파일하면 JS로 바뀌지 않고 사라져 코드가 가벼워진다.
+
+##### abstract class & interface
+
+- 추상클래스 -> 인터페이스 :
+  인터페이스로 오브젝트 또는 클래스의 구조를 정의할 수 있다.
+
+  ```ts
+  interface User {
+    firstName: string;
+    lastName: string;
+    sayHi(name: string): string;
+    fullName(): string;
+  }
+
+  interface Human {
+    health: number;
+  }
+
+  class Player implements User, Human {
+    constructor(firstName: string, lastName: string, health: number) {}
+    sayHi(name: string) {
+      return `Hi I'm ${this.fullName}`;
+    }
+    fullName() {
+      return `${this.firstName} ${this.lastName}`;
+    }
+  }
+  ```
+
+  - 인터페이스를 사용할 때는 extends 대신 implements 키워드를 사용해
+    인터페이스가 자바스크립트 일반 클래스로 컴파일되지 않도록 한다.
+    (추상클래스 대신 인터페이스를 사용해 코드를 가볍게 유지하려는 목적에 부합하도록)
+
+  - **인터페이스를 상속하는 경우**, **프로퍼티를** private, protected으로 선언하지 못한다. (**public으로만 선언할 수 있다.**)
+
+  - 하나의 클래스에서 두 개 이상의 인터페이스를 상속받을 수 있다.
+
+  - 클래스나 인터페이스를 타입으로 사용할 수도 있다.
+
+        ```ts
+        interface User {
+          firstName: string;
+          lastName: string;
+          sayHi(name: string): string;
+          fullName(): string;
+        }
+
+        function makeUser(user: User) {
+          return 'hi';
+        }
+
+        makeUser({
+          firstName: 'seo',
+          lastName: 'moon',
+          fullName: () => 'secret',
+          sayHi: (name) => 'hi',
+        });
+        ```
+
+    => 타입스크립트 커뮤니티에서는 오브젝트의 구조를 정의할 때는
+    인터페이스를, 그 외에는 타입을 사용하는 것을 권장하고 있다.
+    (인터페이스 상속 방식이 더 직관적이고, 동일한 인터페이스의 프로퍼티들을 따로 통합할 수 있기 때문. )
