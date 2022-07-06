@@ -1,10 +1,14 @@
 const fs = require('fs')
 const input = fs.readFileSync('/dev/stdin').toString().split('\n')
 
-const [N, M] = input[0].split(' ').map(v => Number(v))
+const [N, M] = input[0].split(' ').map((v) => Number(v))
 
-const arr = Array(N).fill().map((_, i) => input[i + 1].split(' ').map(v => Number(v)))
+const map = Array(N).fill()
+const candies = Array(N)
+  .fill()
+  .map((_, i) => input[i + 1].split(' ').map((v) => Number(v)))
 
+console.log(N, M, candies)
 
 /*
 1 2 3 ... N
@@ -21,4 +25,3 @@ N
 1,1 -> 1,2 : ()
 
 */
-

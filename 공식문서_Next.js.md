@@ -312,11 +312,11 @@ Next.js는 다음과 같은 기능들을 제공한다.
 - Link 컴포넌트 사용 :
 
   ```jsx
-  import Link from "next/link";
+  import Link from 'next/link'
 
-  <Link href="/">
+  ;<Link href="/">
     <a>Home</a>
-  </Link>;
+  </Link>
   ```
 
   - 클라이언트 사이드 내비게이션 : 페이지 이동이 브라우저가 아닌 JavaScript에 의해 수행됨. 새로고침이 일어나지 않고 브라우저에 의한 페이지 이동보다 빠르다.
@@ -367,12 +367,12 @@ Next.js는 다음과 같은 기능들을 제공한다.
   Next.js의 내장 리액트 컴포넌트인 `<Head>` 컴포넌트를 사용하면 된다.
 
   ```jsx
-  import Head from "next/head";
+  import Head from 'next/head'
 
-  <Head>
+  ;<Head>
     <title>Create Next App</title>
     <link rel="icon" href="/favicon.ico" />
-  </Head>;
+  </Head>
   ```
 
 - `<html>` 태그 속성 등을 변경하려면 `pages/_document.js` 파일을 생성한다
@@ -417,10 +417,10 @@ Next.js는 다음과 같은 기능들을 제공한다.
   layout.js
 
   ```jsx
-  import styles from "./layout.module.css";
+  import styles from './layout.module.css'
 
   export default function Layout({ children }) {
-    return <div className={styles.container}>{children}</div>;
+    return <div className={styles.container}>{children}</div>
   }
   ```
 
@@ -555,11 +555,3 @@ Next.js :
 라우팅, data fetching, 렌더링, 서드파티 서비스 통합, 인프라, 성능, 확장성, 개발자 경험 등 신경써야할 부분이 많음.
 
 Next.js는 리액트가 담당하는 부분 외에도 추가적으로 웹 앱 개발에 필요한 것들을 제공해준다.
-
-```
-
-```
-
-```
-
-```
