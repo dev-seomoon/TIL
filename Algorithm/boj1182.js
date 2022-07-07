@@ -1,13 +1,13 @@
-var fs = require("fs");
+var fs = require('fs')
 
 var input = fs
-  .readFileSync("/dev/stdin")
+  .readFileSync('/dev/stdin')
   .toString()
-  .split("\n")
-  .map((str) => str.split(" "));
+  .split('\n')
+  .map((str) => str.split(' '))
 
-const [N, S] = input[0];
-const nums = input[1];
+const [N, S] = input[0]
+const nums = input[1]
 
 /*
 
@@ -28,4 +28,14 @@ N개의 정수로 이루어진 수열이 있을 때, 크기가 양수인 부분�
 -7 -3 -2 5 8
 예제 출력 1 
 1
+
+
+1) 첫번째 방법 - 조합 구하기
+수열로 만들 수 있는 모든 조합 구하고, 각 조합의 sum 구해서 S와 비교하며 카운팅
+(브루트포스, 완전탐색 방식)
+
+O(2^20) ?
+
+DFS, 재귀호출로 짜는 것이 효율적
+
 */

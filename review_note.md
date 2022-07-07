@@ -44,3 +44,9 @@
       Ref) https://stackoverflow.com/questions/52586965/why-does-prettier-not-format-code-in-vs-code/58669550#58669550
 
 - 패키지 추가 또는 업데이트 시, yarn add 패키지명 입력해서 처리하기 (package.json 직접 수정 지양. yarn berry를 사용하는 프로젝트에서는 필요한 디펜던시(?)들이 설치가 되지 않음)
+
+- Error: listen EADDRINUSE: address already in use :::포트번호
+  => sudo ls of -i :포트번호
+  kill -9 [PID]
+
+https://velog.io/@jsy7517/Error-listen-EADDRINUSE-address-already-in-use-5000
