@@ -578,6 +578,7 @@ export async function getStaticProps({ params }) {
   프로덕션 환경에서는 빌드 타임에 실행된다.
 
 - `getStaticPaths`의 `fallback` 옵션 :
+
   - `false` : `getStaticPaths`에서 리턴하지 않는 경로로 접근하면 404 페이지를 띄움.
   - `true` :
     - `getStaticPaths`에서 리턴한 경로들이 빌드 타임에 HTML로 렌더링됨
@@ -585,7 +586,14 @@ export async function getStaticProps({ params }) {
       해당 경로에 대한 첫 요청 시의 fallback 버전 페이지를 띄움. (?)
       -> [fallback documentation](https://nextjs.org/docs/api-reference/data-fetching/get-static-paths#fallback-false) 참고
 
+- 404 페이지 커스텀 : `pages/404.js`에 작성하면 빌드 타임에 정적으로 생성됨.
+
 ### 6) API 라우팅
+
+API Routes 기능을 사용해 Next.js 앱 안에서
+API 엔드포인트를 Node.js 서버리스 함수로 구현할 수 있다.
+
+`pages/api`
 
 ### 7) 배포하기
 
