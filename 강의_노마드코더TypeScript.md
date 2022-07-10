@@ -452,3 +452,33 @@ type Dress = Cloth & {
     => 타입스크립트 커뮤니티에서는 오브젝트의 구조를 정의할 때는
     인터페이스를, 그 외에는 타입을 사용하는 것을 권장하고 있다.
     (인터페이스 상속 방식이 더 직관적이고, 동일한 인터페이스의 프로퍼티들을 따로 통합할 수 있기 때문. )
+
+### Polymorphism
+
+제네릭 + 클래스 + 인터페이스 => 다형성 구현
+
+제네릭을 사용해 concrete 타입이 아닌 placeholder 타입을
+사용할 수 있다.
+같은 코드를 여러 타입에 재사용할 수 있다.
+
+```ts
+interface Storage<T> {
+  [key: string]: T;
+}
+
+class LocalStorage<T> {
+  private storage: Storage<T> = {};
+  set(key: string, value: T) {
+    this.storage[key] = value;
+  }
+  remove(key: string) {
+    this.storage[key] = null;
+  }
+  get(key: string): T {
+    return this.storage[key];
+  }
+}
+
+const stringStorage = new LocalStorage<string>();
+const booleanStorage = new LocalStorage<boolean>();
+```
