@@ -312,11 +312,10 @@ Next.js는 다음과 같은 기능들을 제공한다.
 - Link 컴포넌트 사용 :
 
   ```jsx
-  import Link from "next/link";
-
-  <Link href="/">
+  import Link from 'next/link'
+  ;<Link href="/">
     <a>Home</a>
-  </Link>;
+  </Link>
   ```
 
   - 클라이언트 사이드 내비게이션 : 페이지 이동이 브라우저가 아닌 JavaScript에 의해 수행됨. 새로고침이 일어나지 않고 브라우저에 의한 페이지 이동보다 빠르다.
@@ -367,12 +366,11 @@ Next.js는 다음과 같은 기능들을 제공한다.
   Next.js의 내장 리액트 컴포넌트인 `<Head>` 컴포넌트를 사용하면 된다.
 
   ```jsx
-  import Head from "next/head";
-
-  <Head>
+  import Head from 'next/head'
+  ;<Head>
     <title>Create Next App</title>
     <link rel="icon" href="/favicon.ico" />
-  </Head>;
+  </Head>
   ```
 
 - `<html>` 태그 속성 등을 변경하려면 `pages/_document.js` 파일을 생성한다
@@ -417,10 +415,10 @@ Next.js는 다음과 같은 기능들을 제공한다.
   layout.js
 
   ```jsx
-  import styles from "./layout.module.css";
+  import styles from './layout.module.css'
 
   export default function Layout({ children }) {
-    return <div className={styles.container}>{children}</div>;
+    return <div className={styles.container}>{children}</div>
   }
   ```
 
@@ -533,7 +531,69 @@ Next.js는 다음과 같은 기능들을 제공한다.
 
 ### 5) Dynamic Routing (동적 라우팅)
 
+블로그 게시글 data에 따라 각 게시글 page의 url을 동적으로 변경하기 -> Dynamic routes 사용
+
+#### page 경로가 외부 데이터에 의존하고 있을 때
+
+이전 섹션에서, page 콘텐츠가 외부 데이터에 의존하는 경우에는
+`getStaticProps`를 사용해 데이터를 가져와 페이지를 렌더링했다.
+
+Next.js에서는 page 경로가 외부 데이터에 의존하는 경우에도
+정적으로 페이지를 생성할 수 있어
+**동적 라우팅(dynamic URLs)**이 가능하다.
+(= path가 외부 데이터에 의존하는 경우에도 pre-rendering이 가능함)
+
+1. `pages/posts/[id].js` 페이지 파일 생성하기 (`[]` 안에 들어가는 `id` 부분이 동적으로 변경됨)
+
+2. 페이지 컴포넌트와 함께 async 함수 `getStaticPaths`를 export한다.
+   `getStaticPaths`에서는 `id`로 사용될 수 있는 값들의 리스트를 리턴한다.
+
+3. `getStaticProps` 함수도 마찬가지로 export한다.  
+   `getStaticProps`는 params 객체를 인자로 받고, `params.id`를 사용해 필요한 외부 데이터들을 가져온다.
+
+`pages/posts/[id].js`
+
+```jsx
+import Layout from '../../components/layout'
+
+export default function Post() {
+  return <Layout>...</Layout>
+}
+
+export async function getStaticPaths() {
+  // Return a list of possible value for id
+}
+
+export async function getStaticProps({ params }) {
+  // Fetch necessary data for the blog post using params.id
+}
+```
+
+-> https://github.com/dev-seomoon/TIL/Practices/nextjs-tutorial
+
+- `getStaticPaths`에서도 `getStaticProps`와 마찬가지로
+  외부 데이터를 가져올수 있다.
+
+- `getStaticPaths`는 개발 환경에서는 매 요청마다 실행되고,
+  프로덕션 환경에서는 빌드 타임에 실행된다.
+
+- `getStaticPaths`의 `fallback` 옵션 :
+
+  - `false` : `getStaticPaths`에서 리턴하지 않는 경로로 접근하면 404 페이지를 띄움.
+  - `true` :
+    - `getStaticPaths`에서 리턴한 경로들이 빌드 타임에 HTML로 렌더링됨
+    - 빌드 타임에 생성되지 않은 경로에 접근할 경우 404 페이지를 띄우지 않고
+      해당 경로에 대한 첫 요청 시의 fallback 버전 페이지를 띄움. (?)
+      -> [fallback documentation](https://nextjs.org/docs/api-reference/data-fetching/get-static-paths#fallback-false) 참고
+
+- 404 페이지 커스텀 : `pages/404.js`에 작성하면 빌드 타임에 정적으로 생성됨.
+
 ### 6) API 라우팅
+
+API Routes 기능을 사용해 Next.js 앱 안에서
+API 엔드포인트를 Node.js 서버리스 함수로 구현할 수 있다.
+
+`pages/api`
 
 ### 7) 배포하기
 
@@ -555,11 +615,3 @@ Next.js :
 라우팅, data fetching, 렌더링, 서드파티 서비스 통합, 인프라, 성능, 확장성, 개발자 경험 등 신경써야할 부분이 많음.
 
 Next.js는 리액트가 담당하는 부분 외에도 추가적으로 웹 앱 개발에 필요한 것들을 제공해준다.
-
-```
-
-```
-
-```
-
-```
