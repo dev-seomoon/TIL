@@ -1,22 +1,43 @@
 /* MooTube, DFS */
-var fs = require('fs')
+var fs = require("fs");
 
-var input = fs.readFileSync('/dev/stdin').toString().split('\n')
+var input = fs.readFileSync("/dev/stdin").toString().split("\n");
 
-const [n, q] = input[0].split(' ').map(Number)
+const [n, q] = input[0].split(" ").map(Number);
 
-const arr = new Array(n + 1)
-for (let i = 0; i < n; i++) {
-  arr[i] = new Array(n + 1)
+const arr = new Array(n + 1);
+const visited = new Array(n + 1);
+for (let i = 0; i < n + 1; i++) {
+  arr[i] = [];
 }
 
-for (let i = 0; i < n - 1; i++) {
-  let [p, q, r] = input[i + 1].split(' ').map(Number)
-  arr[p][q] = r
+for (var i = 0; i < n - 1; i++) {
+  let [p, q, r] = input[i + 1].split(" ").map(Number);
+  arr[p].push([q, r]);
+  arr[q].push([p, r]);
 }
+
+const bfs = (k, v) => {
+  let count = 0;
+  visited.fill(false);
+  const Q = [v];
+  visited[v] = true;
+  while (Q.length) {
+    let curr = Q.shift();
+    arr[curr].forEach((adj) => {
+      if (!visited[adj[0]] && adj[1] >= k) {
+        Q.push(adj[0]);
+        count++;
+        visited[adj[0]] = true;
+      }
+    });
+  }
+  return count;
+};
 
 for (let j = i; j < i + q; j++) {
-  let [k, v] = input[j].split(' ').map(Number)
+  let [k, v] = input[j + 1].split(" ").map(Number);
+  console.log(bfs(k, v));
 }
 
 /*
